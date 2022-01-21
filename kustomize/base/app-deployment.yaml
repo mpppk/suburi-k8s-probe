@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: asia-northeast1-docker.pkg.dev/niboshi-test/k8s-test/k8s-cluster-demo:latest
+        resources:
+          limits:
+            memory: "512Mi" # minimum 
+            cpu: "250m"
+        ports:
+        - containerPort: 3000
