@@ -16,7 +16,19 @@ spec:
         image: asia-northeast1-docker.pkg.dev/niboshi-test/k8s-test/k8s-cluster-demo:latest
         resources:
           limits:
-            memory: "512Mi" # minimum 
+            memory: "512Mi"
             cpu: "250m"
+            ephemeral-storage: "10Mi"
         ports:
-        - containerPort: 3000
+        - name: app-port
+          containerPort: 3001
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: app-port
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: app-port
+          failureThreshold: 10
+          periodSeconds: 5

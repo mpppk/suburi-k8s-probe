@@ -1,10 +1,15 @@
 include .env
+
+setup: create-cluster deploy
+
+init: configure-docker create-docker-repository push-docker-image
+
 create-cluster:
 	gcloud container --project "${GCP_PROJECT}" \
 	clusters create-auto "${CLUSTER_NAME}" \
 	--region "${GCP_REGION}"
 
-delete-cluster:
+delete-cluster: delete-all-cluster-resources 
 	gcloud container --project "${GCP_PROJECT}" \
 	clusters delete "${CLUSTER_NAME}" \
 	--region "${GCP_REGION}"
@@ -33,7 +38,12 @@ push-docker-image: build-docker-image
 	docker push ${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT}/${DOCKER_REPO}/${DOCKER_IMAGE}
 
 deploy:
+ifndef ENV
+	$(error ENV is undefined)
+endif
 	kubectl kustomize kustomize/overlays/${ENV} | kubectl apply -f -
 
 delete-all-cluster-resources:
-	kubectl delete deployments,services --all
+	kubectl delete deployments,services,ingress --all
+
+teardown: delete-cluster
