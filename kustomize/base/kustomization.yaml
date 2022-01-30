@@ -2,3 +2,4 @@ resources:
   - "app-deployment.yaml"
   - "app-service.yaml"
   - "ingress.yaml"
+  - "config-map.yaml"

@@ -6,6 +6,11 @@ app.get("/healthz", (req, res) => {
   res.send("OK");
 });
 
+const greetMessage = process.env['GREET_MESSAGE'] ?? 'DEFAULT_GREET_MESSAGE'
+app.get("/greet", (req, res) => {
+  res.send(greetMessage);
+});
+
 // 起動に時間がかかるアプリをシミュレート
 setTimeout(() => {
   app.listen(port, () => {

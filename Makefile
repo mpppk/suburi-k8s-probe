@@ -43,6 +43,12 @@ ifndef ENV
 endif
 	kubectl kustomize kustomize/overlays/${ENV} | kubectl apply -f -
 
+restart-app:
+ifndef ENV
+	$(error ENV is undefined)
+endif
+	kubectl rollout restart deployments/${ENV}-app
+
 delete-all-cluster-resources:
 	kubectl delete deployments,services,ingress --all
 
